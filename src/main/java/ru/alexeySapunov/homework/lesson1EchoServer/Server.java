@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class Server {
+
     public static void main(String[] args) throws IOException {
         new Server().start();
     }
@@ -58,5 +59,14 @@ public class Server {
         client.read(byteBuffer);
         String message = new String(byteBuffer.array());
         System.out.println("New message: " + message + "Thread name: " + Thread.currentThread().getName());
+
+        if (client.read(byteBuffer) < 0) {
+            key.cancel();
+            client.close();
+        } else {
+            byteBuffer.flip();
+            client.write(byteBuffer);
+            byteBuffer.clear();
+        }
     }
 }
